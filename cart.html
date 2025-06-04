@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopping Cart - Boka's Collection</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Shopping Cart</h1>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="index.html"><button class="button-black">Back to Store</button></a>
+      <a href="cart.html"><button class="button-black">Cart</button></a>
+    </div>
+  </nav>
+  </header>
+  <main>
+
+    <div id="cart-items"></div>
+    <div id="cart-summary"></div>
+    <a href="checkout.html"><button class="button-black">Proceed to Checkout</button></a>
+    <button class="button-black" onclick="clearCart()">Clear Cart</button>
+  </main>
+
+  <footer><p>&copy; 2025 Boka's Collection</p></footer>
+
+  <!-- External JS File -->
+  <script src="script.js" defer></script>
+
+  <!-- Inline Script to display cart -->
+  <script>
+    function displayCart() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const container = document.getElementById("cart-items");
+      const totalDisplay = document.getElementById("cart-total");
+
+      if (cart.length === 0) {
+        container.innerHTML = "<p>Your cart is empty.</p>";
+        totalDisplay.textContent = "";
+        return;
+      }
+
+      let html = "";
+      let total = 0;
+
+       cart.forEach((item, index) => {
+        const product = products.find(p => p.id === item.id);
+        const subtotal = product.price * item.quantity;
+        total += subtotal;
+
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <h3>${product.name}</h3>
+          <p>Price: R${product.price.toFixed(2)}</p>
+          <label>
+            Quantity:
+            <input type="number" min="1" value="${item.quantity}" onchange="updateQuantity('${item.id}', this.value)">
+          </label>
+          <p>Subtotal: R${subtotal.toFixed(2)}</p>
+          <hr>
+        `;
+        cartContainer.appendChild(div);
+      });
+
+      const summary = document.createElement("div");
+      summary.innerHTML = `<h2>Total: R${total.toFixed(2)}</h2>`;
+      cartContainer.appendChild(summary);
+    }
+
+    function updateQuantity(id, qty) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.quantity = parseInt(qty);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        location.reload();
+      }
+    }
+
+    function clearCart() {
+      localStorage.removeItem("cart");
+      location.reload();
+    }
+
+<!-- Inside your JavaScript when creating the Remove button -->
+const removeBtn = document.createElement("button");
+removeBtn.textContent = "Remove";
+removeBtn.className = "button-black";
+removeBtn.onclick = function() {
+  removeItem(item.id);
+};
+div.appendChild(removeBtn);
+
+  </script>
+</body>
+</html>

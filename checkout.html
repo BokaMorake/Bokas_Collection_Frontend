@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - Boka's Collection</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="page-header">
+    <h1>Checkout</h1>
+    <nav>
+      <a href="index.html"><button class="button-black">Home</button></a>
+      <a href="cart.html"><button class="button-black">Cart</button></a>
+    </nav>
+  </header>
+
+  <main class="checkout-container">
+    <section class="checkout-form">
+      <h2>Shipping Details</h2>
+      <form id="checkout-form">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="address">Shipping Address</label>
+        <textarea id="address" name="address" required></textarea>
+
+        <button type="submit" class="shop-button">Place Order</button>
+      </form>
+    </section>
+
+    <section class="checkout-summary">
+      <h2>Order Summary</h2>
+      <ul id="checkout-items"></ul>
+      <p class="total">Total: R<span id="checkout-total">0.00</span></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Boka's Collection</p>
+  </footer>
+
+  <script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const itemsContainer = document.getElementById('checkout-items');
+    const totalContainer = document.getElementById('checkout-total');
+
+    function formatPrice(price) {
+      return price.toLocaleString("en-ZA", { minimumFractionDigits: 2 });
+    }
+
+    function updateQuantity(index, newQuantity) {
+      cart[index].quantity = parseInt(newQuantity);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      displayCart();
+    }
+
+    function displayCart() {
+      itemsContainer.innerHTML = '';
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        const quantity = item.quantity || 1;
+        const itemTotal = item.price * quantity;
+        total += itemTotal;
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <strong>${item.name}</strong><br>
+          R${formatPrice(item.price)} x 
+          <select onchange="updateQuantity(${index}, this.value)">
+            ${[...Array(10).keys()].map(i => {
+              const q = i + 1;
+              return `<option value="${q}" ${q === quantity ? 'selected' : ''}>${q}</option>`;
+            }).join('')}
+          </select>
+          = R${formatPrice(itemTotal)}
+        `;
+        itemsContainer.appendChild(li);
+      });
+
+      totalContainer.textContent = formatPrice(total);
+    }
+
+    // Expose updateQuantity globally
+    window.updateQuantity = updateQuantity;
+
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Thank you! Your order has been placed.');
+      localStorage.removeItem('cart');
+      window.location.href = 'index.html';
+    });
+
+    displayCart();
+  </script>
+</body>
+</html>
