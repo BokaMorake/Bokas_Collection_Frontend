@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout - Boka's Collection</title>
+  <title>Checkout – Boka’s Collection</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <header class="page-header">
     <h1>Checkout</h1>
     <nav>
@@ -40,63 +39,7 @@
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Boka's Collection</p>
-  </footer>
-
-  <script>
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const itemsContainer = document.getElementById('checkout-items');
-    const totalContainer = document.getElementById('checkout-total');
-
-    function formatPrice(price) {
-      return price.toLocaleString("en-ZA", { minimumFractionDigits: 2 });
-    }
-
-    function updateQuantity(index, newQuantity) {
-      cart[index].quantity = parseInt(newQuantity);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      displayCart();
-    }
-
-    function displayCart() {
-      itemsContainer.innerHTML = '';
-      let total = 0;
-
-      cart.forEach((item, index) => {
-        const quantity = item.quantity || 1;
-        const itemTotal = item.price * quantity;
-        total += itemTotal;
-
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <strong>${item.name}</strong><br>
-          R${formatPrice(item.price)} x 
-          <select onchange="updateQuantity(${index}, this.value)">
-            ${[...Array(10).keys()].map(i => {
-              const q = i + 1;
-              return `<option value="${q}" ${q === quantity ? 'selected' : ''}>${q}</option>`;
-            }).join('')}
-          </select>
-          = R${formatPrice(itemTotal)}
-        `;
-        itemsContainer.appendChild(li);
-      });
-
-      totalContainer.textContent = formatPrice(total);
-    }
-
-    // Expose updateQuantity globally
-    window.updateQuantity = updateQuantity;
-
-    document.getElementById('checkout-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('Thank you! Your order has been placed.');
-      localStorage.removeItem('cart');
-      window.location.href = 'index.html';
-    });
-
-    displayCart();
-  </script>
+  <footer><p>&copy; 2025 Boka’s Collection</p></footer>
+  <script src="script.js" defer></script>
 </body>
 </html>
