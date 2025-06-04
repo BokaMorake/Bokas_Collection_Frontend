@@ -1,7 +1,7 @@
 // ===== public/script.js =====
 document.addEventListener("DOMContentLoaded", () => {
-  // 1) Fetch the full product list once
-  fetch("/api/products")
+  // 1) Fetch the full product list once from Render
+  fetch("https://bokas-collection-backend.onrender.com/api/products")
     .then(res => {
       if (!res.ok) throw new Error("Failed to fetch products");
       return res.json();
@@ -239,8 +239,8 @@ function setupCheckoutForm() {
       return;
     }
 
-    // POST to /api/sale
-    fetch("/api/sale", {
+    // POST to /api/sale on Render
+    fetch("https://bokas-collection-backend.onrender.com/api/sale", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cartItems: cart })
